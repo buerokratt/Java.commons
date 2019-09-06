@@ -7,14 +7,14 @@ pipeline {
     stages {
         stage ('Build') {
             steps {
-                sh 'mvn -Dmaven.test.failure.ignore=false install'
+                sh 'mvn clean -U install'
             }
             post {
                 success {
                     sh 'echo "success"'
                 }
                 failure {
-                sh 'echo "fail"'
+                    sh 'echo "fail"'
                 }
             }
         }
