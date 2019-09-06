@@ -2,7 +2,7 @@ package rig.commons.utils;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-public class GuidGenerator {
+public class GuidGenerator implements IDGenerator {
 
     private static AtomicLong LAST_TIME_MS = new AtomicLong();
 

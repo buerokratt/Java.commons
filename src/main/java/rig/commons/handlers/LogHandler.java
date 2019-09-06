@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import rig.commons.utils.GuidGenerator;
+import rig.commons.utils.IDGenerator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,7 +17,8 @@ public class LogHandler extends HandlerInterceptorAdapter {
     private static final String GUID = "REQ_GUID";
     private static final String PREFIX = "GUID_PREFIX";
 
-    private static final GuidGenerator guidGenerator = new GuidGenerator();
+    @Builder.Default
+    private static final IDGenerator guidGenerator = new GuidGenerator();
     @Builder.Default
     private static final DynamicContent mdc = new MDCwrapper();
 
