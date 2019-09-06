@@ -33,7 +33,7 @@ public class LogHandler extends HandlerInterceptorAdapter {
         String message;
 
         if (requestId == null) {
-            requestId = String.valueOf(guidGenerator.getUniqueCurrentTimeMS());
+            requestId = String.valueOf(guidGenerator.getId());
             message = messagePrefix + requestId;
         }
         else {
@@ -46,14 +46,12 @@ public class LogHandler extends HandlerInterceptorAdapter {
         }
 
         MDC.put(KEY, message);
-        org.slf4j.MDC.put(KEY, message);
         return super.preHandle(request, response, handler);
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         MDC.remove(KEY);
-        org.slf4j.MDC.remove(KEY);
         super.postHandle(request, response, handler, modelAndView);
     }
 }

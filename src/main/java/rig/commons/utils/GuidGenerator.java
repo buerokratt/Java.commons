@@ -5,16 +5,8 @@ import java.util.concurrent.atomic.AtomicLong;
 public class GuidGenerator {
 
     private static final AtomicLong LAST_TIME_MS = new AtomicLong();
-    private Long uniqueCurrentTimeMS;
 
-    public long getUniqueCurrentTimeMS() {
-        if (uniqueCurrentTimeMS == null) {
-            this.uniqueCurrentTimeMS = generateUniqueCurrentTimeMS();
-        }
-        return uniqueCurrentTimeMS;
-    }
-
-    private long generateUniqueCurrentTimeMS() {
+    public long getId() {
         long now = System.currentTimeMillis();
         while (true) {
             long lastTime = LAST_TIME_MS.get();

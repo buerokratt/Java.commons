@@ -1,9 +1,9 @@
 package rig.commons.utils;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
 
 public class GuidGeneratorTest  {
 
@@ -16,7 +16,7 @@ public class GuidGeneratorTest  {
 
     @Test
     public void testGetID() {
-        assertEquals(guidGenerator.getUniqueCurrentTimeMS(), guidGenerator.getUniqueCurrentTimeMS());
+        Assert.assertNotEquals(guidGenerator.getId(), guidGenerator.getId());
     }
 
 }
