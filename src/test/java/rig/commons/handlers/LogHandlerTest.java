@@ -9,6 +9,13 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 
 public class LogHandlerTest {
 
@@ -86,6 +93,31 @@ public class LogHandlerTest {
         LogHandler builtHandler = LogHandler.builder().headerName("NONDEFAULT").build();
         builtHandler.preHandle(request, response, object);
         Assert.assertEquals(MDC.get("REQ_GUID"), "request with incoming id 444");
+    }
+
+    @Test
+    public void testThreadSafety() {
+        List<String> strings = new ArrayList();
+        for(int i=0; i<10; i++){
+            new Thread("" + i){
+                public void run()  {
+
+                    handler = LogHandler.builder().build();
+                    request = new MockHttpServletRequest();
+                    response = new MockHttpServletResponse();
+                    try {
+                    handler.preHandle(request, response, object);}
+                    catch (Exception e){
+                        System.out.println(e);
+                    }
+                    strings.add(MDC.get("REQ_GUID"));
+                }
+            }.start();
+        }
+
+        Set<String> set = new HashSet<>(strings);
+        Assert.assertEquals(set.size(),strings.size());
+
     }
 
 }

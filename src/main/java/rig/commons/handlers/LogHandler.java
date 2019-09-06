@@ -16,7 +16,7 @@ public class LogHandler extends HandlerInterceptorAdapter {
 
     private static final String KEY = "REQ_GUID";
 
-    private static final GuidGenerator guidGenerator = new GuidGenerator();
+    private final GuidGenerator guidGenerator = new GuidGenerator();
 
     @Builder.Default
     private String messagePrefix = "request with id ";
