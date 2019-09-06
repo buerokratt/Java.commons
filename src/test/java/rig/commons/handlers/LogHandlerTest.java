@@ -1,7 +1,7 @@
 package rig.commons.handlers;
 
-import org.hamcrest.CoreMatchers;
 import static org.junit.Assert.*;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.MDC;
@@ -49,7 +49,7 @@ public class LogHandlerTest {
     @Test
     public void testDefaultMessagePrefix() throws Exception {
         handler.preHandle(request, response, object);
-        assertEquals(MDC.get(PREFIX),"request with id ");
+        assertEquals(MDC.get(PREFIX), "request with id ");
     }
 
     @Test
@@ -98,14 +98,15 @@ public class LogHandlerTest {
     }
 
     @Test
-    public void testThreadSafety()  {
+    public void testThreadSafety() {
         List<String> strings = new ArrayList();
         Collection syncedStrings = Collections.synchronizedCollection(strings);
         handler = LogHandler.builder().build();
 
         for (int i = 0; i < 30_000; i++) {
             new Thread("" + i) {
-                public void run()   {
+
+                public void run() {
                     request = new MockHttpServletRequest();
                     response = new MockHttpServletResponse();
                     try {
