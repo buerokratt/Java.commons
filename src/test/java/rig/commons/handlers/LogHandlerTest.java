@@ -10,6 +10,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -96,7 +98,8 @@ public class LogHandlerTest {
     @Test
     public void testThreadSafety() {
         List<String> strings = new ArrayList();
-        for(int i=0; i<10; i++){
+        Collection c = Collections.synchronizedCollection(strings);
+        for(int i=0; i<30_000; i++){
             new Thread("" + i){
                 public void run()  {
 
@@ -108,13 +111,13 @@ public class LogHandlerTest {
                     catch (Exception e){
                         System.out.println(e);
                     }
-                    strings.add(MDC.get("REQ_GUID"));
+                    c.add(MDC.get("REQ_GUID"));
                 }
             }.start();
         }
 
         Set<String> set = new HashSet<>(strings);
-        Assert.assertEquals(set.size(),strings.size());
+        Assert.assertEquals(set.size(),c.size());
 
     }
 

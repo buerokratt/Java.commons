@@ -4,7 +4,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class GuidGenerator {
 
-    private static final AtomicLong LAST_TIME_MS = new AtomicLong();
+    private static  AtomicLong LAST_TIME_MS = new AtomicLong();
 
     public long getId() {
         long now = System.currentTimeMillis();
