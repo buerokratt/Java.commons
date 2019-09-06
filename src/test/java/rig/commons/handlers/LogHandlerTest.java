@@ -99,16 +99,18 @@ public class LogHandlerTest {
     public void testThreadSafety() {
         List<String> strings = new ArrayList();
         Collection c = Collections.synchronizedCollection(strings);
-        for(int i=0; i<30_000; i++){
-            new Thread("" + i){
-                public void run()  {
+        for (int i = 0; i < 30_000; i++) {
+            new Thread("" + i) {
+
+                public void run() {
 
                     handler = LogHandler.builder().build();
                     request = new MockHttpServletRequest();
                     response = new MockHttpServletResponse();
                     try {
-                    handler.preHandle(request, response, object);}
-                    catch (Exception e){
+                        handler.preHandle(request, response, object);
+                    }
+                    catch (Exception e) {
                         System.out.println(e);
                     }
                     c.add(MDC.get("REQ_GUID"));
@@ -117,7 +119,7 @@ public class LogHandlerTest {
         }
 
         Set<String> set = new HashSet<>(strings);
-        Assert.assertEquals(set.size(),c.size());
+        Assert.assertEquals(set.size(), c.size());
 
     }
 
