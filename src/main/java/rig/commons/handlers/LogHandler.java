@@ -1,11 +1,11 @@
 package rig.commons.handlers;
 
 import lombok.Builder;
-import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import rig.commons.utils.GuidGenerator;
+import rig.commons.utils.IDGenerator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,9 +14,13 @@ import javax.servlet.http.HttpServletResponse;
 @Builder
 public class LogHandler extends HandlerInterceptorAdapter {
 
-    private static final String KEY = "REQ_GUID";
+    private static final String GUID = "REQ_GUID";
+    private static final String PREFIX = "GUID_PREFIX";
 
-    private final GuidGenerator guidGenerator = new GuidGenerator();
+    @Builder.Default
+    private static final IDGenerator guidGenerator = new GuidGenerator();
+    @Builder.Default
+    private static final DynamicContent mdc = new MDCwrapper();
 
     @Builder.Default
     private String messagePrefix = "request with id ";
@@ -30,28 +34,30 @@ public class LogHandler extends HandlerInterceptorAdapter {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestId = request.getHeader(headerName);
-        String message;
+        String guidPrefix;
 
         if (requestId == null) {
             requestId = String.valueOf(guidGenerator.getId());
-            message = messagePrefix + requestId;
+            guidPrefix = messagePrefix;
         }
         else {
-            message = incomingMessagePrefix + requestId;
+            guidPrefix = incomingMessagePrefix;
 
         }
 
         if (requestId.isEmpty()) {
-            message = emptyMessagePrefix;
+            guidPrefix = emptyMessagePrefix;
         }
 
-        MDC.put(KEY, message);
+        mdc.put(PREFIX, guidPrefix);
+        mdc.put(GUID, requestId);
         return super.preHandle(request, response, handler);
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        MDC.remove(KEY);
+        mdc.remove(GUID);
+        mdc.remove(PREFIX);
         super.postHandle(request, response, handler, modelAndView);
     }
 }
