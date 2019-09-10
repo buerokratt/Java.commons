@@ -3,6 +3,7 @@ package rig.commons.handlers;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -98,6 +99,7 @@ public class LogHandlerTest {
     }
 
     @Test
+    @Ignore
     public void testThreadSafety() {
         List<String> strings = new ArrayList();
         Collection syncedStrings = Collections.synchronizedCollection(strings);
