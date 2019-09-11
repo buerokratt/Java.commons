@@ -27,7 +27,7 @@ public class TimingAspect {
         String timeStamp = getCurrentLocalDateTimeStamp(start);
         Object result = pjp.proceed();
         if (log.isDebugEnabled()) {
-            log.debug("{} started at  {}, execution took {} ms. ",
+            log.debug("{} started at {}, execution took {} ms.",
                     pjp.getSignature().toShortString(), timeStamp, System.currentTimeMillis() - start);
         }
         return result;

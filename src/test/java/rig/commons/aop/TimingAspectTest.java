@@ -2,7 +2,6 @@ package rig.commons.aop;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -35,8 +34,9 @@ public class TimingAspectTest {
     @Test
     public void testLogging() throws Throwable {
         aspect.logExecutionTime(proceedingJoinPoint);
+        String pattern = "TESTSIGNATURE started at (\\d\\d\\.){2}\\d{4} (\\d\\d:){2}\\d\\d\\.\\d{3}" +
+                ", execution took \\d+ ms\\.";
         String logString = StaticAppender.getEvents().get(0);
-        Assert.assertThat(logString, CoreMatchers.containsString("TESTSIGNATURE started at"));
-        Assert.assertThat(logString, CoreMatchers.containsString("execution took"));
+        Assert.assertTrue(logString.matches(pattern));
     }
 }
