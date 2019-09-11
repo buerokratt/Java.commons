@@ -3,7 +3,6 @@ package rig.commons.handlers;
 import static org.junit.Assert.*;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -99,28 +98,36 @@ public class LogHandlerTest {
     }
 
     @Test
-    @Ignore
-    public void testThreadSafety() {
+    public void testThreadSafety() throws Exception {
         List<String> strings = new ArrayList();
         Collection syncedStrings = Collections.synchronizedCollection(strings);
         handler = LogHandler.builder().build();
+        Set<Thread> threads = new HashSet<>();
 
         for (int i = 0; i < 30_000; i++) {
-            new Thread("" + i) {
+            threads.add(
+                    new Thread("" + i) {
 
-                public void run() {
-                    request = new MockHttpServletRequest();
-                    response = new MockHttpServletResponse();
-                    try {
-                        handler.preHandle(request, response, object);
-                    }
-                    catch (Exception e) {
-                        throw new RuntimeException();
-                    }
-                    syncedStrings.add(MDC.get("REQ_GUID"));
-                }
+                        public void run() {
+                            request = new MockHttpServletRequest();
+                            response = new MockHttpServletResponse();
+                            try {
+                                handler.preHandle(request, response, object);
+                            }
+                            catch (Exception e) {
+                                throw new RuntimeException();
+                            }
+                            syncedStrings.add(MDC.get("REQ_GUID"));
+                        }
+                    });
+        }
 
-            }.start();
+        for (Thread t : threads) {
+            t.start();
+        }
+
+        for (Thread t : threads) {
+            t.join();
         }
 
         Set<String> set = new HashSet<>(strings);
