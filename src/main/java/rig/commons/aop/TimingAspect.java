@@ -12,6 +12,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * If a method is annotated as timed it's execution time is logged at debug level
+ * If a class is annotated as timed all of it's public methods are timed
+ */
 @Aspect
 @Component
 @Slf4j
