@@ -1,5 +1,8 @@
 package rig.commons.handlers;
 
+/**
+ * Interface with methods for accessing dynamic content
+ */
 public interface DynamicContent {
 
     String get(String key);

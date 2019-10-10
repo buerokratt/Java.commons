@@ -10,6 +10,9 @@ import rig.commons.utils.IDGenerator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * An interceptor class that populates dynamic context for a httpRequest
+ */
 @Component
 @Builder
 public class LogHandler extends HandlerInterceptorAdapter {
@@ -31,6 +34,22 @@ public class LogHandler extends HandlerInterceptorAdapter {
     @Builder.Default
     private String headerName = "REQUEST_ID";
 
+    /**
+     * This implementation always returns true. It also populates the dynamic context
+     * with two key-value pairs. Map entry for key "REQ_GUID" contains unique ID for the request
+     * and map entry with key "GUID_PREFIX" contains a prefix string that can be used to differentiate if the
+     * request ID was aquired from the incoming request's header or was generated anew or empty ID aquired from the incoming
+     * request ID.
+     * Private variables corresponding to such strings are named incomingMessagePrefix, messagePrefix and emptyMessagePrefix.
+     * These can be set when creating LogHandler object by LogHandler.builder().
+     * Their defaults are : "request with incoming id ", "request with id " and "request with incoming empty id ".
+     *
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * @param handler chosen handler to execute
+     * @return true if the execution chain should proceed with the next interceptor or the handler itself.
+     * @throws Exception - in case of errors
+     */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String requestId = request.getHeader(headerName);
@@ -54,6 +73,13 @@ public class LogHandler extends HandlerInterceptorAdapter {
         return super.preHandle(request, response, handler);
     }
 
+    /**
+     * @param request current HTTP request
+     * @param response current HTTP response
+     * @param handler that started the execution
+     * @param modelAndView  that the handler returned (can also be null)
+     * @throws Exception - in case of errors
+     */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         mdc.remove(GUID);
