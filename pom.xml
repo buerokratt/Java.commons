@@ -28,7 +28,7 @@
 
     <repositories>
         <repository>
-            <id>maven-group</id>
+            <id>credentials</id>
             <url>https://nexus.ria.ee/repository/maven-public/</url>
         </repository>
     </repositories>
