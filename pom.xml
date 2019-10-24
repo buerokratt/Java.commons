@@ -26,4 +26,11 @@
         <module>uid-log</module>
     </modules>
 
+    <repositories>
+        <repository>
+            <id>maven-group</id>
+            <url>https://nexus.ria.ee/repository/maven-public/</url>
+        </repository>
+    </repositories>
+
 </project>
