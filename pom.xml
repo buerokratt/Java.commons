@@ -29,7 +29,7 @@
     <repositories>
         <repository>
             <id>credentials</id>
-            <url>https://nexus.ria.ee/repository/maven-public/</url>
+            <url>https://nexus.ria.ee/repository/riigiportaal-maven-group-local/</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
