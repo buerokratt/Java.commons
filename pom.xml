@@ -30,6 +30,12 @@
         <repository>
             <id>credentials</id>
             <url>https://nexus.ria.ee/repository/maven-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
