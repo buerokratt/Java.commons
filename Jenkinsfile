@@ -7,7 +7,6 @@ pipeline {
     stages {
         stage('Build & deploy') {
             steps {
-                cleanWs()
                 withMaven() {
                     sh 'mvn dependency:list-repositories'
                     sh 'mvn clean -U deploy'
