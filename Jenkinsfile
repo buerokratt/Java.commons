@@ -7,9 +7,14 @@ pipeline {
     stages {
         stage('Build & deploy') {
             steps {
-                withMaven() {
-                    sh 'mvn dependency:list-repositories'
-                    sh 'mvn clean -U deploy'
+                withCredentials([
+                        usernamePassword(
+                                credentialsId: 'riigiportaal-nexus',
+                                usernameVariable: 'USERNAME',
+                                passwordVariable: 'PASSWORD')]) {
+                    withMaven() {
+                        sh 'mvn clean -U deploy'
+                    }
                 }
             }
             post {
