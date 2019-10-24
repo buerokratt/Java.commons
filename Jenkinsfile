@@ -1,5 +1,4 @@
 pipeline {
-    agent {label 'slave-u1604-2'}
     tools {
         maven 'Default'
         jdk 'Default'
