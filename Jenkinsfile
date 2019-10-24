@@ -5,9 +5,13 @@ pipeline {
         jdk 'Default'
     }
     stages {
-        stage ('Build') {
+        stage('Build & deploy') {
             steps {
-                sh 'mvn clean -U deploy'
+                cleanWs()
+                withMaven() {
+                    sh 'mvn dependency:list-repositories'
+                    sh 'mvn clean -U deploy'
+                }
             }
             post {
                 success {
