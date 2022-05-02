@@ -1,17 +1,16 @@
 package rig.commons.handlers;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
+import static org.junit.jupiter.api.Assertions.*;
 
-import static org.junit.Assert.*;
 
-
-public class GenericHeaderLogHandlerTest {
+class GenericHeaderLogHandlerTest {
 
     private GenericHeaderLogHandler handler;
     private MockHttpServletRequest request;
@@ -22,7 +21,7 @@ public class GenericHeaderLogHandlerTest {
     private static final String KEY = "ORIG_IP";
     private static final String HEADERNAME = "x-forwarded-for";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         handler = GenericHeaderLogHandler.builder().headerName(HEADERNAME).messagePrefix(PREFIX).key(KEY).build();
         request = new MockHttpServletRequest();
@@ -30,26 +29,25 @@ public class GenericHeaderLogHandlerTest {
     }
 
     @Test
-    public void testThatKeyAddedToMDC() throws Exception {
+    void testThatKeyAddedToMDC() throws Exception {
         handler.preHandle(request, response, object);
         assertNotNull(MDC.get(KEY));
     }
 
     @Test
-    public void testThatKeyRemovedFromMDC() throws Exception {
+    void testThatKeyRemovedFromMDC() throws Exception {
         handler.postHandle(request, response, object, modelAndView);
         assertNull(MDC.get(KEY));
     }
 
-
     @Test
-    public void testNANString() throws Exception {
+    void testNANString() throws Exception {
         handler.preHandle(request, response, object);
         assertEquals(MDC.get(KEY), PREFIX + "unknown");
     }
 
     @Test
-    public void testHappyPath() throws Exception {
+    void testHappyPath() throws Exception {
         request.addHeader(HEADERNAME, "s");
         handler.preHandle(request, response, object);
         assertEquals(MDC.get(KEY), PREFIX + "s");

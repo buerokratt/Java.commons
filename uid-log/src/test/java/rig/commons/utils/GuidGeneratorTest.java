@@ -1,22 +1,23 @@
 package rig.commons.utils;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
-public class GuidGeneratorTest  {
+class GuidGeneratorTest {
 
     private GuidGenerator guidGenerator;
 
-    @Before
+    @BeforeEach
     public void setup() {
         this.guidGenerator = new GuidGenerator();
     }
 
     @Test
-    public void testGetID() {
-        Assert.assertNotEquals(guidGenerator.getId(), guidGenerator.getId());
+    void testGetID() {
+        assertNotEquals(guidGenerator.getId(), guidGenerator.getId());
     }
 
 }

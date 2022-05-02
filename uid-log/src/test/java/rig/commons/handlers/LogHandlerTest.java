@@ -1,23 +1,18 @@
 package rig.commons.handlers;
 
-import static org.junit.Assert.*;
-
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.MDC;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 
-public class LogHandlerTest {
+class LogHandlerTest {
 
     private LogHandler handler;
     private MockHttpServletRequest request;
@@ -27,7 +22,7 @@ public class LogHandlerTest {
     private static final String PREFIX = "GUID_PREFIX";
     private static final String GUID = "REQ_GUID";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         handler = LogHandler.builder().build();
         request = new MockHttpServletRequest();
@@ -35,46 +30,46 @@ public class LogHandlerTest {
     }
 
     @Test
-    public void testThatKeyAddedToMDC() throws Exception {
+    void testThatKeyAddedToMDC() throws Exception {
         handler.preHandle(request, response, object);
         assertNotNull(MDC.get(GUID));
     }
 
     @Test
-    public void testThatKeyRemovedFromMDC() throws Exception {
+    void testThatKeyRemovedFromMDC() throws Exception {
         handler.postHandle(request, response, object, modelAndView);
         assertNull(MDC.get(GUID));
     }
 
     @Test
-    public void testDefaultMessagePrefix() throws Exception {
+    void testDefaultMessagePrefix() throws Exception {
         handler.preHandle(request, response, object);
         assertEquals(MDC.get(PREFIX), "request with id ");
     }
 
     @Test
-    public void testDefaultIncomingMessagePrefix() throws Exception {
+    void testDefaultIncomingMessagePrefix() throws Exception {
         request.addHeader("REQUEST_ID", "444");
         handler.preHandle(request, response, object);
         assertEquals(MDC.get(GUID), "444");
     }
 
     @Test
-    public void testDefaultEmptyMessagePrefix() throws Exception {
+    void testDefaultEmptyMessagePrefix() throws Exception {
         request.addHeader("REQUEST_ID", "");
         handler.preHandle(request, response, object);
         assertEquals(MDC.get(PREFIX), "request with incoming empty id ");
     }
 
     @Test
-    public void testNONDefaultMessagePrefix() throws Exception {
+    void testNONDefaultMessagePrefix() throws Exception {
         LogHandler builtHandler = LogHandler.builder().messagePrefix("NONDEFAULT").build();
         builtHandler.preHandle(request, response, object);
         assertEquals(MDC.get(PREFIX), "NONDEFAULT");
     }
 
     @Test
-    public void testNONDefaultIncomingMessagePrefix() throws Exception {
+    void testNONDefaultIncomingMessagePrefix() throws Exception {
         request.addHeader("REQUEST_ID", "444");
         LogHandler builtHandler = LogHandler.builder().incomingMessagePrefix("NONDEFAULT").build();
         builtHandler.preHandle(request, response, object);
@@ -82,7 +77,7 @@ public class LogHandlerTest {
     }
 
     @Test
-    public void testNONDefaultEmptyMessagePrefix() throws Exception {
+    void testNONDefaultEmptyMessagePrefix() throws Exception {
         request.addHeader("REQUEST_ID", "");
         LogHandler builtHandler = LogHandler.builder().emptyMessagePrefix("NONDEFAULT").build();
         builtHandler.preHandle(request, response, object);
@@ -90,7 +85,7 @@ public class LogHandlerTest {
     }
 
     @Test
-    public void testNONDefaultHeaderName() throws Exception {
+    void testNONDefaultHeaderName() throws Exception {
         request.addHeader("NONDEFAULT", "444");
         LogHandler builtHandler = LogHandler.builder().headerName("NONDEFAULT").build();
         builtHandler.preHandle(request, response, object);
@@ -98,7 +93,7 @@ public class LogHandlerTest {
     }
 
     @Test
-    public void testThreadSafety() throws Exception {
+    void testThreadSafety() throws Exception {
         List<String> strings = new ArrayList();
         Collection syncedStrings = Collections.synchronizedCollection(strings);
         handler = LogHandler.builder().build();
@@ -113,8 +108,7 @@ public class LogHandlerTest {
                             response = new MockHttpServletResponse();
                             try {
                                 handler.preHandle(request, response, object);
-                            }
-                            catch (Exception e) {
+                            } catch (Exception e) {
                                 throw new RuntimeException();
                             }
                             syncedStrings.add(MDC.get("REQ_GUID"));
